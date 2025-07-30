@@ -7,6 +7,7 @@ File Purpose: Data manipulation and processing utilities for the application.
 """
 
 import csv
+import random
 
 def get_all_category_entries(data_source):
     """ Parse the source file and get a list of all unique categories that are not in the Final Jeopardy."""
@@ -43,6 +44,26 @@ def get_all_question_entries(data_source):
                 points = jeopardy_question_data[1] 
                 answer = jeopardy_question_data[6]
                 category = jeopardy_question_data[3]
-                question_dict = {"question": question, "answer": answer, "points": points, "category": category}
+                round = jeopardy_question_data[0]
+                question_dict = {"question": question, "answer": answer, "points": points, "category": category, "round": round}
                 jeopardy_questions.append(question_dict)
     return jeopardy_questions, len(jeopardy_questions)
+
+def get_random_game_board(data_source, number_categories=6, number_questions=5):
+    """ Build the jeopardy game board with random categories and questions."""
+
+    all_questions, _ = get_all_question_entries(data_source)
+    all_categories, _ = get_all_category_entries(data_source)
+
+    board_categories = random.sample(all_categories, number_categories)
+    question_list = []
+
+    for category in board_categories:
+        question_list.append([])
+    for question in all_questions:
+        question_category = question["category"]
+        if question_category in board_categories:
+            category_num = board_categories.index(question_category)
+            question_list[category_num].append(question)
+
+    return question_list
