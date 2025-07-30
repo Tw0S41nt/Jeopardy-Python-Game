@@ -1,2 +1,8 @@
 # Environment variables.
 .env
+
+# Cached source code.
+__pycache__
+
+# Ignore database.
+instance
