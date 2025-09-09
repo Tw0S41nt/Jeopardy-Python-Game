@@ -1,2 +1,2 @@
 # Jeopardy-Python-Game
-Jeopardy game made in python ft. Joseph
+Jeopardy game made in python ft. Joseph 😋🥳🐱‍💻
