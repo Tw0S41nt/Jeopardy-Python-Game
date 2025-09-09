@@ -16,6 +16,9 @@ from dotenv import load_dotenv
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
+# Import board.
+from utils import get_random_game_board
+
 # Local application imports.
 
 # Create the application.
@@ -31,4 +34,12 @@ db.init_app(app)
 @app.route("/")
 def homepage():
     """ Display the application homepage. """
-    return "This... is Jeopardy! My name is Jeff!"
+    try:
+        game_board = get_random_game_board('jeopardy.tsv')
+
+        return f"<pre>{game_board}</pre>"
+    
+    except FileNotFoundError:
+        return "Jeopardy.tsv not found."
+    except Exception as e:
+        return f"An error occurred: {e}", 500
