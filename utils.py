@@ -67,3 +67,11 @@ def get_random_game_board(data_source, number_categories=6, disallowed_rounds = 
             question_list[category_num].append(question)
 
     return question_list
+
+
+def get_host_code():
+    """ Generates random 6 digit code for host. """
+    host_code = ''
+    while len(host_code) < 7:
+        host_code += str(random.randint(0,9))
+    return host_code
