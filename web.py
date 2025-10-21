@@ -14,7 +14,7 @@ import json
 
 # Third-party imports.
 from dotenv import load_dotenv
-from flask import Flask
+from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
 
 # Import board.
@@ -55,8 +55,8 @@ def homepage():
     try:
         game_board = get_random_game_board('jeopardy.tsv')
 
-        return f"<pre>{game_board}</pre>"
-    
+        return render_template("index.html", board=game_board)
+
     except FileNotFoundError:
         return "Jeopardy.tsv not found."
     except Exception as e:
@@ -65,7 +65,11 @@ def homepage():
 def create_game_db_obj(round=0, number_categories = 6):
     """ Get JSON string of board object (list). """
     rounds = [[2, 3], [1, 3], [1, 2]]
-    board = get_random_game_board('jeopardy.tsv', disallowed_rounds = rounds[round], number_categories=number_categories)
+    board = get_random_game_board(
+        'jeopardy.tsv',
+        disallowed_rounds = rounds[round],
+        number_categories=number_categories
+    )
     return json.dumps(board)
 
 @app.route("/game/new/")
@@ -75,19 +79,24 @@ def game_new():
         # Create boards and game objects.
         r1 = create_game_db_obj()
         r1_db = JeopardyBoard(board=r1)
-        
+
         r2 = create_game_db_obj(round=1)
         r2_db = JeopardyBoard(board=r2)
-        
+
         final = create_game_db_obj(round=2, number_categories=1)
         final_db = JeopardyBoard(board=final)
-        
+
         db.session.add(r1_db)
         db.session.add(r2_db)
         db.session.add(final_db)
         db.session.commit()
-        
-        new_game = JeopardyGame(r1=r1_db.id, r2=r2_db.id, final_jeopardy=final_db.id, host_code=get_host_code())
+
+        new_game = JeopardyGame(
+            r1=r1_db.id,
+            r2=r2_db.id,
+            final_jeopardy=final_db.id,
+            host_code=get_host_code()
+        )
         db.session.add(new_game)
         db.session.commit()
         return f"<pre>{r1}</pre><br><br><pre>{r2}</pre><br><br><pre>{final}</pre>"
