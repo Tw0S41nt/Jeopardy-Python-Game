@@ -14,7 +14,7 @@ import json
 
 # Third-party imports.
 from dotenv import load_dotenv
-from flask import Flask, render_template
+from flask import Flask, render_template, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 
 # Import board.
@@ -52,15 +52,7 @@ with app.app_context():
 @app.route("/")
 def homepage():
     """ Display the application homepage. """
-    try:
-        game_board = get_random_game_board('jeopardy.tsv')
-
-        return render_template("index.html", board=game_board)
-
-    except FileNotFoundError:
-        return "Jeopardy.tsv not found."
-    except Exception as e:
-        return f"An error occurred: {e}", 500
+    return render_template("index.html")
 
 def create_game_db_obj(round=0, number_categories = 6):
     """ Get JSON string of board object (list). """
@@ -99,7 +91,7 @@ def game_new():
         )
         db.session.add(new_game)
         db.session.commit()
-        return f"<pre>{r1}</pre><br><br><pre>{r2}</pre><br><br><pre>{final}</pre>"
+        return redirect(url_for("game_view", game_id=new_game.game_id, round=0))
     except FileNotFoundError:
         return "Jeopardy.tsv not found.", 500
     except Exception as e:
@@ -115,7 +107,14 @@ def game_view(game_id, round):
     rounds = [r1, r2, final]
     # Load the board corresponding to the round.
     board = json.loads(rounds[round].board)
-    return str(board)
+    return render_template("board.html", board=board, game=game)
+
+@app.route("/host/<host_code>")
+def host_view(host_code):
+    """ View for the host to manage the game. """
+    game = JeopardyGame.query.filter_by(host_code = host_code).first_or_404()
+    return f"Host view for game ID: {game.game_id}"
 
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True)
+    # <a href="/host/{{ game.host_code }}">Host View</a>

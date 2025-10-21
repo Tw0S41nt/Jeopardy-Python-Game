@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+    
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Jeopardy Game</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    </head>
+
+    <body>
+        <h1>Jeopardy Game</h1>
+        {# Overall Jeopardy Board #}
+        <div id="jeopardy-board">
+            {# Display the random selection of categories #}
+            <div class="category-row">
+                {% for category_questions in board %}
+                    {% if category_questions | length > 0 %}
+                        <div class="category-header">
+                            {{ category_questions[0].category | upper }}
+                        </div>
+                    {% else %}
+                        <div class="category-header empty-category">
+                            NO QUESTIONS
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            {# Display question boxes' points #}
+            {% for i in range(5) %}
+                <div class="category-row question-row">
+                    {# Iterate over each category's list of questions #}
+                    {% for category_questions in board %}
+                        <div class="question-container">
+                            {# Check if a question exists for this point value (row 'i') in this category #}
+                            {% if category_questions | length > i %}
+                                {# The 'points' value of the question is displayed on the box. #}
+                                {% set question = category_questions[i] %}
+                                <div class="question-box"
+                                    data-category="{{ question.category }}"
+                                    data-points="{{ question.points }}"
+                                    data-question="{{ question.question }}"
+                                    data-answer="{{ question.answer }}"
+                                    data-round="{{ question.round }}">
+
+                                    ${{ question.points}}
+                                </div>
+                            {% else %}
+                                {# Placeholder for a row that doesn't have enough questions (Not likely but why not) #}
+                                <div class="question-box disabled-box">
+                                    N/A
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        </div>
+    </body>
+</html>
