@@ -113,7 +113,7 @@ def game_view(game_id, round):
 def host_view(host_code):
     """ View for the host to manage the game. """
     game = JeopardyGame.query.filter_by(host_code = host_code).first_or_404()
-    return f"Host view for game ID: {game.game_id}"
+    return render_template("host.html", game=game)
 
 if __name__ == "__main__":
     app.run(debug=True)
