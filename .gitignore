@@ -3,6 +3,3 @@
 
 # Cached source code.
 __pycache__
-
-# Ignore database.
-instance
