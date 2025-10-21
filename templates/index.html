@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+    
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Jeopardy Game</title>
+        <link rel="stylesheet" href="style.css">
+    </head>
+
+    <body>
+        <h1>Jeopardy Game</h1>
+        <div id="jeopardy-board">
+            <div class="category-row">
+                {% for category_questions in board %}
+                    {% if category_questions | length > 0 %}
+                        <div class="category-header">
+                            {{ category_questions[0].category | upper }}
+                        </div>
+                    {% else %}
+                        <div class="category-header empty-category">
+                            NO QUESTIONS
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    </body>
+</html>
