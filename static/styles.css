@@ -1,0 +1,13 @@
+:root {
+    --jeopardy-blue: #060CE9;
+    --jeopardy-yellow: #FFCC00;
+    --jeopardy-text: white;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: black;
+    color: var(--jeopardy-text);
+    text-align: center;
+    padding: 20px;
+}
