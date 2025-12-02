@@ -11,3 +11,14 @@ body {
     text-align: center;
     padding: 20px;
 }
+table, th, td {
+    border: 1px solid white;
+    border-collapse: collapse; /* Prevents double borders between cells */
+}
+table {
+    width: 100%; /* Makes the table span the full width of its container */
+}
+th, td {
+    padding: 8px; /* Adds space inside cells */
+    text-align: center; /* Aligns text within cells */
+}

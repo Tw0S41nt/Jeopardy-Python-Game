@@ -13,37 +13,41 @@
         <h1>Jeopardy Game</h1>
         {# Overall Jeopardy Board #}
         <table>
-            <th>
-                {# Display the random selection of categories #}
-                {% for category_questions in board %}
-                    {% if category_questions | length > 0 %}
-                        <th>{{ category_questions[0].category | upper }}</th>
-                    {% else %}
-                        <th>NO QUESTIONS</th>
-                    {% endif %}
+            <thead>
+                <tr>
+                    {# Display the random selection of categories #}
+                    {% for category_questions in board %}
+                        {% if category_questions | length > 0 %}
+                            <th>{{ category_questions[0].category | upper }}</th>
+                        {% else %}
+                            <th>NO QUESTIONS</th>
+                        {% endif %}
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for i in range(5) %}
+                <tr>
+                    {% for category_questions in board %}
+                        {# Check if a question exists for this point value (row 'i') in this category #}
+                        {% if category_questions | length > i %}
+                            {# The 'points' value of the question is displayed on the box. #}
+                            {% set question = category_questions[i] %}
+                            <td data-category="{{ question.category }}"
+                                data-points="{{ question.points }}"
+                                data-question="{{ question.question }}"
+                                data-answer="{{ question.answer }}"
+                                data-round="{{ question.round }}">
+                                ${{ question.points}}
+                            </td>
+                        {% else %}
+                            {# Placeholder for a row that doesn't have enough questions (Not likely but why not) #}
+                            <td>N/A</td>
+                        {% endif %}
+                    {% endfor %}
+                </tr>
                 {% endfor %}
-            </th>
-            {% for i in range(5) %}
-            <tr>
-                {% for category_questions in board %}
-                    {# Check if a question exists for this point value (row 'i') in this category #}
-                    {% if category_questions | length > i %}
-                        {# The 'points' value of the question is displayed on the box. #}
-                        {% set question = category_questions[i] %}
-                        <td data-category="{{ question.category }}"
-                            data-points="{{ question.points }}"
-                            data-question="{{ question.question }}"
-                            data-answer="{{ question.answer }}"
-                            data-round="{{ question.round }}">
-                            ${{ question.points}}
-                        </td>
-                    {% else %}
-                        {# Placeholder for a row that doesn't have enough questions (Not likely but why not) #}
-                        <td>N/A</td>
-                    {% endif %}
-                {% endfor %}
-            </tr>
-            {% endfor %}
+            </tbody>
         </table>
         <script src="{{ url_for('static', filename='script.js') }}"></script>
     </body>
