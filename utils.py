@@ -8,6 +8,7 @@ File Purpose: Data manipulation and processing utilities for the application.
 
 import csv
 import random
+from collections import Counter
 
 def get_all_category_entries(data_source, disallowed_rounds=[3]):
     """ Parse the source file and get a list of all unique categories that are not in the Final Jeopardy."""
@@ -19,11 +20,21 @@ def get_all_category_entries(data_source, disallowed_rounds=[3]):
         jeopardy_data = csv.reader(file, delimiter="\t")
         next(jeopardy_data)
 
+        category_counts = Counter(row[3] for row in jeopardy_data)
+        file.seek(0)
+        next(jeopardy_data)  # Skip header row again
+
         jeopardy_categories = []
         for jeopardy_question_data in jeopardy_data:
-            # Select all question categories that are unique and not Final Jeopardy. 
-            if jeopardy_question_data[3] not in jeopardy_categories and int(jeopardy_question_data[0]) not in disallowed_rounds:
-                jeopardy_categories.append(jeopardy_question_data[3])
+            # Select all question categories that are unique and not Final Jeopardy.
+            category = jeopardy_question_data[3]
+            round_num = int(jeopardy_question_data[0])
+            if (
+                category not in jeopardy_categories 
+                and round_num not in disallowed_rounds
+                and category_counts[category] == 5
+            ):
+                jeopardy_categories.append(category)
     return jeopardy_categories, len(jeopardy_categories)
 
 def get_all_question_entries(data_source, disallowed_rounds=[3]):
@@ -75,3 +86,7 @@ def get_host_code():
     while len(host_code) < 7:
         host_code += str(random.randint(0,9))
     return host_code
+
+if __name__ == "__main__":
+    # For testing purposes.
+    print(get_all_category_entries('jeopardy.tsv')[1])
