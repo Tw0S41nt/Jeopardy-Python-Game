@@ -49,6 +49,14 @@
                 {% endfor %}
             </tbody>
         </table>
+        {# Question Display Box #}
+        <div id="question-box" class="hidden">
+            <h2>{{ 'Selected Question' }}</h2>
+            <p><strong>{{ 'Category:' }}</strong> <span id="display-category"></span></p>
+            <p><strong>{{ 'Points:' }}</strong> $<span id="display-points"></span></p>
+            <p id="display-question" class="question-text"></p>
+        </div>
+        {# JavaScript #}
         <script src="{{ url_for('static', filename='script.js') }}"></script>
     </body>
 </html>
